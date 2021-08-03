@@ -26,6 +26,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -123,5 +124,15 @@ public class UserDomainTest {
         userList = userRepository.findAll();
         System.out.println("user_delete_test() : userList.size() = " + userList.size());
         assertThat(userList.size()).isEqualTo(0);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void user_get_test() throws Exception {
+        List<User> userList = userRepository.findAll();
+        User user = userList.get(0);
+        String userCode = user.getUserCode();
+        String url = "http://localhost:" + port + "/api/v1/user/" + userCode;
+        mvc.perform(get(url).accept(MediaType.APPLICATION_JSON)).andDo(print());
     }
 }

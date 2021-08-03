@@ -3,6 +3,7 @@ package org.office.web.rest;
 import lombok.RequiredArgsConstructor;
 import org.office.domain.user.dto.request.UserSaveRequestDto;
 import org.office.domain.user.dto.request.UserUpdateRequestDto;
+import org.office.domain.user.dto.response.UserInfoResponseDto;
 import org.office.service.user.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +31,11 @@ public class UserApiController {
     @DeleteMapping("/api/v1/user/{code}")
     public void userDeleteControl(@PathVariable("code") String userCode) {
         userService.userDeleteService(userCode);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_MANAGER', 'ROLE_DEVELOPER')")
+    @GetMapping("/api/v1/user/{code}")
+    public UserInfoResponseDto userGetControl(@PathVariable("code") String userCode) {
+        return userService.userInfoService(userCode);
     }
 }

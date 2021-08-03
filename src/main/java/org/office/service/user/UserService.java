@@ -5,6 +5,7 @@ import org.office.domain.user.User;
 import org.office.domain.user.UserRepository;
 import org.office.domain.user.dto.request.UserSaveRequestDto;
 import org.office.domain.user.dto.request.UserUpdateRequestDto;
+import org.office.domain.user.dto.response.UserInfoResponseDto;
 import org.office.domain.user.dto.secure.SessionUser;
 import org.office.domain.user.enums.UserStatus;
 import org.office.domain.user.exceptions.UserNotFoundException;
@@ -90,5 +91,12 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new UserNotFoundException("User 정보를 찾을 수 없습니다."));
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public UserInfoResponseDto userInfoService(String userCode) {
+        User user = userRepository.findByUserCode(userCode)
+                .orElseThrow(() -> new UserNotFoundException("User 정보를 찾을 수 없습니다."));
+        return new UserInfoResponseDto(user);
     }
 }
